@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Fotosintesis · Simulasi Interaktif</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a5 50%, #81c784 100%);
+            min-height: 100vh;
+            color: #1b5e20;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Latar daun/awan hijau */
+        .leaf-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+        }
+
+        .leaf {
+            position: absolute;
+            background: #2e7d32;
+            border-radius: 80% 20% 70% 30% / 40% 60% 40% 60%;
+            filter: drop-shadow(0 10px 15px rgba(0, 60, 0, 0.2));
+            animation: floatLeaf 20s infinite alternate ease-in-out;
+        }
+
+        .leaf1 {
+            width: 200px;
+            height: 100px;
+            top: 30px;
+            left: 5%;
+            transform: rotate(15deg);
+            animation-duration: 28s;
+        }
+
+        .leaf2 {
+            width: 280px;
+            height: 130px;
+            bottom: 150px;
+            right: 2%;
+            transform: rotate(-20deg);
+            animation-duration: 35s;
+        }
+
+        .leaf3 {
+            width: 180px;
+            height: 90px;
+            top: 200px;
+            right: 20%;
+            transform: rotate(40deg);
+            animation-duration: 22s;
+        }
+
+        @keyframes floatLeaf {
+            0% { transform: translateX(0) translateY(0) rotate(15deg); }
+            100% { transform: translateX(30px) translateY(20px) rotate(25deg); }
+        }
+
+        /* Partikel latar (kloroplas) */
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.1;
+        }
+
+        .chloroplast {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #2e7d32;
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        /* Konten utama */
+        .wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem 3rem;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1b5e20, #4caf50, #81c784);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 3px 5px 15px rgba(255, 255, 255, 0.8);
+            letter-spacing: -0.5px;
+        }
+
+        h1 i {
+            color: #ffb74d;
+            -webkit-text-fill-color: initial;
+            background: none;
+            text-shadow: 0 0 20px #ffb74d;
+        }
+
+        .daily-fact-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 60px;
+            border: 3px solid white;
+            box-shadow: 0 15px 25px rgba(46, 125, 50, 0.25);
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #1b5e20;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .daily-fact-card i {
+            color: #ffb74d;
+            font-size: 1.8rem;
+            filter: drop-shadow(0 2px 5px #ffb74d);
+        }
+
+        /* Navigasi Timeline */
+        .timeline {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
+            padding: 1.2rem 1.8rem;
+            border-radius: 70px;
+            margin: 30px 0 40px;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 25px rgba(46, 125, 50, 0.15);
+        }
+
+        .timeline-btn {
+            background: transparent;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1b5e20;
+            transition: 0.3s;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-btn i {
+            font-size: 1.5rem;
+            color: #4caf50;
+            transition: 0.3s;
+        }
+
+        .timeline-btn.active {
+            background: #4caf50;
+            color: white;
+            border-color: #ffb74d;
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px #81c784;
+        }
+
+        .timeline-btn.active i {
+            color: white;
+        }
+
+        /* Panel Materi */
+        .materi-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 60px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 25px 40px rgba(46, 125, 50, 0.25);
+        }
+
+        .materi-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .materi-icon {
+            font-size: 4rem;
+            background: linear-gradient(135deg, #4caf50, #81c784);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 10px 15px rgba(46, 125, 50, 0.4));
+        }
+
+        .materi-header h2 {
+            font-size: 2.4rem;
+            color: #1b5e20;
+            border-left: 8px solid #ffb74d;
+            padding-left: 25px;
+        }
+
+        .materi-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.9fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        .materi-desc {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 1.5rem;
+            border-radius: 40px;
+        }
+
+        .materi-desc p {
+            margin-bottom: 1rem;
+        }
+
+        .materi-desc ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .materi-desc li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .materi-desc li i {
+            color: #4caf50;
+            font-size: 1.3rem;
+            width: 25px;
+        }
+
+        /* Ikon interaktif */
+        .interactive-icons {
+            background: #c8e6c9;
+            border-radius: 50px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: inset 0 -5px 10px #a5d6a5, 0 15px 25px #81c784;
+        }
+
+        .icon-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+
+        .icon-item {
+            cursor: pointer;
+            transition: all 0.3s;
+            filter: drop-shadow(0 10px 15px #66bb6a);
+            text-align: center;
+        }
+
+        .icon-item:hover {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .icon-item i {
+            font-size: 4.5rem;
+        }
+
+        .icon-item .fa-sun {
+            color: #ffb74d;
+            text-shadow: 0 0 25px #ff9800;
+        }
+
+        .icon-item .fa-leaf {
+            color: #4caf50;
+        }
+
+        .icon-item .fa-droplet {
+            color: #4fc3f7;
+        }
+
+        .icon-item .fa-wind {
+            color: #b0bec5;
+        }
+
+        .icon-item .fa-seedling {
+            color: #2e7d32;
+        }
+
+        .icon-item .fa-tree {
+            color: #1b5e20;
+        }
+
+        .icon-label {
+            font-weight: 700;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+
+        .info-bubble {
+            background: #1b5e20;
+            color: white;
+            padding: 1rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.9; }
+            50% { opacity: 1; transform: scale(1.02); }
+            100% { opacity: 0.9; }
+        }
+
+        /* Kuis */
+        .quiz-container {
+            background: rgba(255, 248, 225, 0.9);
+            backdrop-filter: blur(5px);
+            border-radius: 60px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 3px solid #ffb74d;
+        }
+
+        .quiz-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-header i {
+            font-size: 3rem;
+            color: #ffb74d;
+        }
+
+        .quiz-header h3 {
+            font-size: 2rem;
+            color: #1b5e20;
+        }
+
+        .quiz-progress {
+            width: 100%;
+            height: 15px;
+            background: #e0e0e0;
+            border-radius: 30px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .quiz-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #81c784);
+            border-radius: 30px;
+            transition: width 0.5s;
+            width: 0%;
+        }
+
+        .quiz-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        #quizQuestion {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #1b5e20;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-option-btn {
+            background: white;
+            border: 3px solid #4caf50;
+            border-radius: 60px;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1b5e20;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .quiz-option-btn:hover:not(:disabled) {
+            background: #4caf50;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .quiz-option-btn.correct {
+            background: #4caf50;
+            border-color: #2e7d32;
+            color: white;
+        }
+
+        .quiz-option-btn.wrong {
+            background: #f44336;
+            border-color: #c62828;
+            color: white;
+        }
+
+        .quiz-option-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .quiz-feedback {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-radius: 50px;
+            text-align: center;
+        }
+
+        .quiz-feedback.correct {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .quiz-feedback.wrong {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .quiz-nav-btn {
+            background: #ffb74d;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #ff9800;
+            transition: 0.05s linear;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quiz-nav-btn:active {
+            transform: translateY(6px);
+            box-shadow: none;
+        }
+
+        .quiz-nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 6px 0 #ff9800;
+        }
+
+        .quiz-score {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: #1b5e20;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+        }
+
+        /* Mini Game Fotosintesis */
+        .game-area {
+            background: #a5d6a5;
+            border-radius: 50px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 3px solid white;
+        }
+
+        #gameCanvas {
+            background: #e8f5e9;
+            border-radius: 40px;
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border: 4px solid white;
+            cursor: pointer;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            background: #f9f3d9;
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 2rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 6px 0 #ab8e5a;
+            cursor: pointer;
+            transition: 0.05s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: translateY(6px);
+            box-shadow: none;
+        }
+
+        #gameMessage {
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+        }
+
+        /* Audio kontrol */
+        .audio-control {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: white;
+            padding: 18px;
+            border-radius: 60px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            z-index: 99;
+            cursor: pointer;
+            border: 3px solid #4caf50;
+            transition: 0.3s;
+        }
+
+        .audio-control:hover {
+            transform: scale(1.1);
+            background: #e8f5e9;
+        }
+
+        #audioBtn i {
+            font-size: 2.2rem;
+            color: #1b5e20;
+        }
+
+        .audio-status {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            z-index: 98;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .audio-status.show {
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: #1b5e20;
+            font-weight: 600;
+            margin-top: 60px;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 60px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Responsif */
+        @media (max-width: 900px) {
+            .materi-content {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .wrapper {
+                padding: 1rem;
+            }
+
+            .timeline-btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Latar daun -->
+    <div class="leaf-bg">
+        <div class="leaf leaf1"></div>
+        <div class="leaf leaf2"></div>
+        <div class="leaf leaf3"></div>
+    </div>
+
+    <!-- Partikel kloroplas -->
+    <div class="particle-bg" id="particleContainer"></div>
+
+    <div class="wrapper">
+        <!-- Header -->
+        <header>
+            <h1><i class="fas fa-leaf"></i> Lab Fotosintesis Digital</h1>
+            <div class="daily-fact-card" id="dailyFact">
+                <i class="fas fa-star"></i>
+                <span>Memuat fakta fotosintesis...</span>
+            </div>
+        </header>
+
+        <!-- Navigasi Timeline -->
+        <nav class="timeline" id="timelineNav">
+            <button class="timeline-btn active" data-target="proses">
+                <i class="fas fa-sun"></i> Proses
+            </button>
+            <button class="timeline-btn" data-target="manfaat">
+                <i class="fas fa-seedling"></i> Manfaat
+            </button>
+            <button class="timeline-btn" data-target="faktor">
+                <i class="fas fa-chart-line"></i> Faktor
+            </button>
+            <button class="timeline-btn" data-target="unik">
+                <i class="fas fa-flask"></i> Fakta Unik
+            </button>
+        </nav>
+
+        <!-- Panel Materi -->
+        <div id="materiContainer" class="materi-panel">
+            <!-- Akan diisi JavaScript -->
+        </div>
+
+        <!-- Kuis -->
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <i class="fas fa-question-circle"></i>
+                <h3>Kuis Fotosintesis</h3>
+            </div>
+
+            <div class="quiz-progress">
+                <div class="quiz-progress-bar" id="quizProgressBar"></div>
+            </div>
+
+            <div class="quiz-stats">
+                <span id="quizCurrent">Soal 1</span>
+                <span id="quizScore">Skor: 0</span>
+            </div>
+
+            <div id="quizQuestion">Memuat soal...</div>
+
+            <div class="quiz-options" id="quizOptions">
+                <!-- Opsi akan diisi JS -->
+            </div>
+
+            <div id="quizFeedback" class="quiz-feedback"></div>
+
+            <div class="quiz-navigation">
+                <button class="quiz-nav-btn" id="prevQuizBtn">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <span class="quiz-score" id="totalScore">0/20</span>
+                <button class="quiz-nav-btn" id="nextQuizBtn">
+                    Selanjutnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <button class="quiz-nav-btn" id="resetQuizBtn" style="margin: 1rem auto; background: #ff6b6b;">
+                <i class="fas fa-redo-alt"></i> Mulai Ulang Kuis
+            </button>
+        </div>
+
+        <!-- Mini Game Tangkap Unsur Fotosintesis -->
+        <div class="game-area">
+            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                <i class="fas fa-gamepad" style="font-size: 2rem;"></i>
+                Tangkap Unsur Fotosintesis!
+            </h3>
+            <canvas id="gameCanvas" width="500" height="250"></canvas>
+            <div class="game-controls">
+                <span style="font-size: 1.4rem; font-weight: 700;">
+                    Skor: <span id="scoreDisplay">0</span>
+                </span>
+                <button class="btn" id="restartGame">
+                    <i class="fas fa-sync-alt"></i> Mulai Lagi
+                </button>
+            </div>
+            <div id="gameMessage">Klik kiri/kanan canvas untuk menggeser daun!</div>
+        </div>
+
+        <footer>
+            <i class="fas fa-leaf"></i> Laboratorium Fotosintesis · Belajar proses hijau tumbuhan!
+            <i class="fas fa-sun"></i>
+        </footer>
+    </div>
+
+    <!-- Kontrol Audio -->
+    <div class="audio-control" id="audioBtn">
+        <i class="fas fa-volume-up"></i>
+    </div>
+    <div class="audio-status" id="audioStatus">Suara alam: ON</div>
+
+    <script>
+        (function() {
+            // ---------- DATA MATERI FOTOSINTESIS ----------
+            const materiData = {
+                proses: {
+                    title: '☀️ Proses Fotosintesis',
+                    icon: 'fa-sun',
+                    desc: 'Fotosintesis adalah proses tumbuhan membuat makanan menggunakan cahaya matahari.',
+                    points: [
+                        { icon: 'fa-sun', text: 'Cahaya matahari ditangkap klorofil daun' },
+                        { icon: 'fa-droplet', text: 'Air (H₂O) diserap akar dari tanah' },
+                        { icon: 'fa-wind', text: 'Karbon dioksida (CO₂) masuk melalui stomata' },
+                        { icon: 'fa-leaf', text: 'Di daun, dihasilkan glukosa dan oksigen (O₂)' }
+                    ],
+                    interactiveIcons: [
+                        { icon: 'fa-sun', label: 'Cahaya', action: 'cahaya' },
+                        { icon: 'fa-droplet', label: 'Air', action: 'air' },
+                        { icon: 'fa-wind', label: 'CO₂', action: 'co2' },
+                        { icon: 'fa-leaf', label: 'Daun', action: 'daun' }
+                    ]
+                },
+                manfaat: {
+                    title: '🌱 Manfaat Fotosintesis',
+                    icon: 'fa-seedling',
+                    desc: 'Fotosintesis sangat penting bagi kehidupan di Bumi.',
+                    points: [
+                        { icon: 'fa-wind', text: 'Menghasilkan oksigen (O₂) untuk bernapas' },
+                        { icon: 'fa-seedling', text: 'Membuat makanan (glukosa) untuk tumbuhan' },
+                        { icon: 'fa-tree', text: 'Dasar rantai makanan' },
+                        { icon: 'fa-earth-asia', text: 'Mengurangi kadar CO₂ di atmosfer' }
+                    ],
+                    interactiveIcons: [
+                        { icon: 'fa-wind', label: 'Oksigen', action: 'oksigen' },
+                        { icon: 'fa-seedling', label: 'Glukosa', action: 'glukosa' },
+                        { icon: 'fa-tree', label: 'Rantai makanan', action: 'rantai' },
+                        { icon: 'fa-earth-asia', label: 'Lingkungan', action: 'lingkungan' }
+                    ]
+                },
+                faktor: {
+                    title: '📊 Faktor yang Mempengaruhi',
+                    icon: 'fa-chart-line',
+                    desc: 'Beberapa hal memengaruhi laju fotosintesis.',
+                    points: [
+                        { icon: 'fa-sun', text: 'Intensitas cahaya matahari' },
+                        { icon: 'fa-droplet', text: 'Ketersediaan air' },
+                        { icon: 'fa-temperature-high', text: 'Suhu lingkungan' },
+                        { icon: 'fa-wind', text: 'Kadar CO₂ di udara' }
+                    ],
+                    interactiveIcons: [
+                        { icon: 'fa-sun', label: 'Cahaya', action: 'intensitas' },
+                        { icon: 'fa-droplet', label: 'Air', action: 'ketersediaan' },
+                        { icon: 'fa-temperature-high', label: 'Suhu', action: 'suhu' },
+                        { icon: 'fa-wind', label: 'CO₂', action: 'kadar' }
+                    ]
+                },
+                unik: {
+                    title: '🔬 Fakta Unik Fotosintesis',
+                    icon: 'fa-flask',
+                    desc: 'Tahukah kamu hal-hal menarik ini?',
+                    points: [
+                        { icon: 'fa-moon', text: 'Beberapa tanaman melakukan fotosintesis di malam hari (CAM)' },
+                        { icon: 'fa-water', text: 'Tumbuhan air juga berfotosintesis' },
+                        { icon: 'fa-leaf', text: 'Warna daun disebabkan oleh klorofil' },
+                        { icon: 'fa-tree', text: 'Pohon besar menghasilkan oksigen untuk 4 orang/hari' }
+                    ],
+                    interactiveIcons: [
+                        { icon: 'fa-moon', label: 'CAM', action: 'cam' },
+                        { icon: 'fa-water', label: 'Hidrofit', action: 'hidrofit' },
+                        { icon: 'fa-leaf', label: 'Klorofil', action: 'klorofil' },
+                        { icon: 'fa-tree', label: 'Produksi O₂', action: 'produksi' }
+                    ]
+                }
+            };
+
+            // ---------- DATA KUIS (20 SOAL FOTOSINTESIS) ----------
+            const quizData = [
+                // Proses (5 soal)
+                { category: 'proses', question: 'Apa bahan utama yang diperlukan dalam fotosintesis?', options: ['Air, CO₂, dan cahaya', 'Oksigen dan gula', 'Tanah dan pupuk', 'Mineral dan garam'], correct: 0 },
+                { category: 'proses', question: 'Di bagian mana tumbuhan fotosintesis berlangsung?', options: ['Akar', 'Batang', 'Daun', 'Bunga'], correct: 2 },
+                { category: 'proses', question: 'Apa yang dihasilkan fotosintesis?', options: ['CO₂ dan air', 'Glukosa dan O₂', 'Protein dan lemak', 'Mineral dan vitamin'], correct: 1 },
+                { category: 'proses', question: 'Apa fungsi klorofil?', options: ['Menyerap air', 'Menangkap cahaya', 'Menyimpan makanan', 'Melindungi dari hama'], correct: 1 },
+                { category: 'proses', question: 'Dari mana tumbuhan mendapatkan CO₂?', options: ['Akar', 'Udara melalui stomata', 'Batang', 'Cahaya matahari'], correct: 1 },
+                
+                // Manfaat (5 soal)
+                { category: 'manfaat', question: 'Mengapa fotosintesis penting bagi hewan?', options: ['Menghasilkan oksigen', 'Menghasilkan CO₂', 'Membuat tanah subur', 'Menahan air'], correct: 0 },
+                { category: 'manfaat', question: 'Apa yang terjadi jika tidak ada fotosintesis?', options: ['Oksigen habis', 'CO₂ habis', 'Hujan turun', 'Suhu naik'], correct: 0 },
+                { category: 'manfaat', question: 'Fotosintesis menghasilkan glukosa. Glukosa digunakan untuk...', options: ['Energi dan pertumbuhan', 'Pigmen daun', 'Menyerap air', 'Melindungi dari panas'], correct: 0 },
+                { category: 'manfaat', question: 'Bagaimana fotosintesis membantu lingkungan?', options: ['Mengurangi CO₂', 'Menambah CO₂', 'Mengurangi O₂', 'Menambah polusi'], correct: 0 },
+                { category: 'manfaat', question: 'Oksigen hasil fotosintesis digunakan untuk...', options: ['Bernapas', 'Fotosintesis lagi', 'Pembakaran', 'Semua jawaban benar'], correct: 0 },
+                
+                // Faktor (5 soal)
+                { category: 'faktor', question: 'Apa yang terjadi jika cahaya terlalu sedikit?', options: ['Fotosintesis lambat', 'Fotosintesis cepat', 'Tumbuhan tumbuh besar', 'Tumbuhan berbunga'], correct: 0 },
+                { category: 'faktor', question: 'Suhu ideal untuk fotosintesis umumnya...', options: ['25-30°C', '0-5°C', '>50°C', '<0°C'], correct: 0 },
+                { category: 'faktor', question: 'Kekurangan air akan menyebabkan...', options: ['Stomata menutup', 'Fotosintesis makin cepat', 'Daun makin hijau', 'Akar makin panjang'], correct: 0 },
+                { category: 'faktor', question: 'Peningkatan CO₂ hingga batas tertentu akan...', options: ['Meningkatkan fotosintesis', 'Menurunkan fotosintesis', 'Tidak berpengaruh', 'Membunuh tumbuhan'], correct: 0 },
+                { category: 'faktor', question: 'Apa yang dimaksud dengan titik jenuh cahaya?', options: ['Cahaya maksimal untuk fotosintesis', 'Cahaya minimal', 'Cahaya merusak klorofil', 'Tidak ada hubungan'], correct: 0 },
+                
+                // Fakta Unik (5 soal)
+                { category: 'unik', question: 'Tumbuhan apa yang fotosintesis di malam hari?', options: ['Kaktus (CAM)', 'Padi', 'Jagung', 'Kelapa'], correct: 0 },
+                { category: 'unik', question: 'Apa pigmen utama fotosintesis?', options: ['Klorofil', 'Karoten', 'Antosianin', 'Xantofil'], correct: 0 },
+                { category: 'unik', question: 'Di mana letak klorofil?', options: ['Kloroplas', 'Mitokondria', 'Vakuola', 'Dinding sel'], correct: 0 },
+                { category: 'unik', question: 'Satu pohon besar dewasa menghasilkan oksigen untuk...', options: ['4 orang/hari', '1 orang/hari', '10 orang/hari', '100 orang/hari'], correct: 0 },
+                { category: 'unik', question: 'Fotosintesis pertama kali ditemukan oleh...', options: ['Jan Ingenhousz', 'Charles Darwin', 'Gregor Mendel', 'Louis Pasteur'], correct: 0 }
+            ];
+
+            // ---------- STATE KUIS ----------
+            let currentQuizIndex = 0;
+            let userAnswers = new Array(quizData.length).fill(null);
+            let quizScore = 0;
+
+            // ---------- FUNGSI RENDER MATERI ----------
+            function renderMateri(tabId) {
+                const data = materiData[tabId];
+                let html = `
+                    <div class="materi-header">
+                        <i class="fas ${data.icon} materi-icon"></i>
+                        <h2>${data.title}</h2>
+                    </div>
+                    <div class="materi-content">
+                        <div class="materi-desc">
+                            <p>${data.desc}</p>
+                            <ul>
+                `;
+                
+                data.points.forEach(point => {
+                    html += `<li><i class="fas ${point.icon}"></i> ${point.text}</li>`;
+                });
+                
+                html += `
+                            </ul>
+                        </div>
+                        <div class="interactive-icons">
+                            <h4 style="margin-bottom: 1rem;"><i class="fas fa-hand-pointer"></i> Klik Ikon untuk Info!</h4>
+                            <div class="icon-grid">
+                `;
+                
+                data.interactiveIcons.forEach(icon => {
+                    html += `
+                        <div class="icon-item" data-action="${icon.action}">
+                            <i class="fas ${icon.icon}"></i>
+                            <div class="icon-label">${icon.label}</div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                            </div>
+                            <div class="info-bubble" id="infoBubble">
+                                ✨ Klik ikon untuk mempelajari lebih lanjut!
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('materiContainer').innerHTML = html;
+                
+                // Event listener untuk ikon interaktif
+                document.querySelectorAll('.icon-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const action = this.dataset.action;
+                        let message = '';
+                        
+                        const messages = {
+                            // Proses
+                            cahaya: '☀️ Cahaya matahari ditangkap klorofil di daun. Energi cahaya diubah menjadi energi kimia.',
+                            air: '💧 Air diserap akar dari tanah, naik melalui batang menuju daun.',
+                            co2: '🌬️ Karbon dioksida masuk melalui stomata (mulut daun) dari udara.',
+                            daun: '🍃 Di daun, tepatnya di kloroplas, terjadi reaksi fotosintesis.',
+                            
+                            // Manfaat
+                            oksigen: '🫧 Oksigen (O₂) hasil fotosintesis dilepaskan ke udara dan kita gunakan untuk bernapas.',
+                            glukosa: '🍬 Glukosa digunakan tumbuhan sebagai energi dan bahan pembentuk sel.',
+                            rantai: '🐛 Tumbuhan produsen, dimakan hewan, membentuk rantai makanan.',
+                            lingkungan: '🌍 Fotosintesis menyerap CO₂, membantu mengurangi efek rumah kaca.',
+                            
+                            // Faktor
+                            intensitas: '💡 Semakin tinggi intensitas cahaya (sampai batas tertentu), fotosintesis makin cepat.',
+                            ketersediaan: '💧 Kekurangan air membuat stomata menutup, fotosintesis terhambat.',
+                            suhu: '🌡️ Suhu ideal 25-30°C. Terlalu panas enzim rusak, terlalu dingin reaksi lambat.',
+                            kadar: '📈 CO₂ dibutuhkan sebagai bahan baku. Kadar CO₂ tinggi meningkatkan fotosintesis.',
+                            
+                            // Fakta unik
+                            cam: '🌵 Tumbuhan CAM (kaktus, nanas) buka stomata malam hari untuk hemat air.',
+                            hidrofit: '💦 Tumbuhan air juga berfotosintesis, CO₂ diambil dari air.',
+                            klorofil: '🍃 Klorofil memberi warna hijau dan berperan menangkap cahaya.',
+                            produksi: '🌳 Pohon besar bisa hasilkan oksigen cukup untuk 4 orang per hari!'
+                        };
+                        
+                        message = messages[action] || 'Menarik! Terus eksplorasi ya.';
+                        document.getElementById('infoBubble').textContent = message;
+                    });
+                });
+            }
+
+            // ---------- FUNGSI RENDER KUIS ----------
+            function renderQuiz() {
+                const q = quizData[currentQuizIndex];
+                document.getElementById('quizQuestion').textContent = q.question;
+                
+                let optionsHtml = '';
+                q.options.forEach((opt, idx) => {
+                    let btnClass = 'quiz-option-btn';
+                    if (userAnswers[currentQuizIndex] !== null) {
+                        if (idx === q.correct) {
+                            btnClass += ' correct';
+                        } else if (idx === userAnswers[currentQuizIndex] && idx !== q.correct) {
+                            btnClass += ' wrong';
+                        }
+                    }
+                    optionsHtml += `
+                        <button class="${btnClass}" data-opt-index="${idx}" ${userAnswers[currentQuizIndex] !== null ? 'disabled' : ''}>
+                            <i class="fas ${idx === 0 ? 'fa-a' : idx === 1 ? 'fa-b' : idx === 2 ? 'fa-c' : 'fa-d'}"></i>
+                            ${opt}
+                        </button>
+                    `;
+                });
+                
+                document.getElementById('quizOptions').innerHTML = optionsHtml;
+                
+                // Update progress
+                const progress = ((currentQuizIndex + 1) / quizData.length) * 100;
+                document.getElementById('quizProgressBar').style.width = progress + '%';
+                document.getElementById('quizCurrent').textContent = `Soal ${currentQuizIndex + 1}/${quizData.length}`;
+                
+                // Hitung skor
+                quizScore = userAnswers.reduce((acc, ans, idx) => {
+                    return acc + (ans === quizData[idx].correct ? 1 : 0);
+                }, 0);
+                document.getElementById('quizScore').textContent = `Skor: ${quizScore}`;
+                document.getElementById('totalScore').textContent = `${quizScore}/${quizData.length}`;
+                
+                // Feedback
+                const feedbackEl = document.getElementById('quizFeedback');
+                if (userAnswers[currentQuizIndex] !== null) {
+                    if (userAnswers[currentQuizIndex] === q.correct) {
+                        feedbackEl.textContent = '✅ Benar! Hebat!';
+                        feedbackEl.className = 'quiz-feedback correct';
+                    } else {
+                        feedbackEl.textContent = `❌ Jawaban benar: ${q.options[q.correct]}`;
+                        feedbackEl.className = 'quiz-feedback wrong';
+                    }
+                } else {
+                    feedbackEl.textContent = '';
+                    feedbackEl.className = 'quiz-feedback';
+                }
+                
+                // Event listener untuk opsi
+                document.querySelectorAll('.quiz-option-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (userAnswers[currentQuizIndex] !== null) return;
+                        
+                        const selectedIdx = parseInt(this.dataset.optIndex);
+                        userAnswers[currentQuizIndex] = selectedIdx;
+                        renderQuiz();
+                    });
+                });
+                
+                // Update navigasi
+                document.getElementById('prevQuizBtn').disabled = currentQuizIndex === 0;
+                document.getElementById('nextQuizBtn').disabled = currentQuizIndex === quizData.length - 1;
+            }
+
+            // ---------- EVENT KUIS ----------
+            document.getElementById('prevQuizBtn').addEventListener('click', () => {
+                if (currentQuizIndex > 0) {
+                    currentQuizIndex--;
+                    renderQuiz();
+                }
+            });
+            
+            document.getElementById('nextQuizBtn').addEventListener('click', () => {
+                if (currentQuizIndex < quizData.length - 1) {
+                    currentQuizIndex++;
+                    renderQuiz();
+                }
+            });
+            
+            document.getElementById('resetQuizBtn').addEventListener('click', () => {
+                userAnswers = new Array(quizData.length).fill(null);
+                currentQuizIndex = 0;
+                renderQuiz();
+            });
+
+            // ---------- NAVIGASI TIMELINE ----------
+            const tabs = document.querySelectorAll('.timeline-btn');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    renderMateri(tab.dataset.target);
+                });
+            });
+
+            // ---------- DAILY FACT ----------
+            const dailyFacts = [
+                "Tumbuhan menghasilkan oksigen yang kita hirup!",
+                "Fotosintesis mengubah energi cahaya menjadi energi kimia.",
+                "Klorofil memberi warna hijau pada daun.",
+                "Tanpa fotosintesis, tidak akan ada kehidupan di Bumi.",
+                "Hutan hujan Amazon menghasilkan 20% oksigen dunia.",
+                "Fotosintesis pertama kali ditemukan tahun 1779.",
+                "Satu hektar hutan menyerap CO₂ 2-10 ton per tahun.",
+                "Alga di lautan melakukan 50-80% fotosintesis Bumi.",
+                "Glukosa hasil fotosintesis bisa jadi pati, selulosa.",
+                "Tanaman CAM seperti lidah buaya hemat air saat fotosintesis."
+            ];
+            
+            function setDailyFact() {
+                const today = new Date().getDate();
+                const idx = today % dailyFacts.length;
+                document.querySelector('#dailyFact span').innerText = dailyFacts[idx];
+            }
+            setDailyFact();
+
+            // ---------- MINI GAME TANGKAP UNSUR FOTOSINTESIS ----------
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            let gameScore = 0;
+            let elements = [];
+            let player = { x: 200, width: 80, y: 210, height: 30 };
+            let gameInterval;
+            let gameActive = true;
+
+            // Unsur fotosintesis yang jatuh
+            const photoElements = [
+                { icon: '☀️', text: 'Cahaya', value: 2, color: '#FFB74D' },
+                { icon: '💧', text: 'H₂O', value: 1, color: '#4FC3F7' },
+                { icon: '🌫️', text: 'CO₂', value: 1, color: '#B0BEC5' },
+                { icon: '🍃', text: 'Klorofil', value: 3, color: '#66BB6A' },
+                { icon: '⬇️', text: 'Air', value: 1, color: '#4FC3F7' }
+            ];
+
+            function spawnElement() {
+                const el = photoElements[Math.floor(Math.random() * photoElements.length)];
+                elements.push({
+                    x: 20 + Math.random() * (canvas.width - 60),
+                    y: 10,
+                    speed: 1 + Math.random() * 2,
+                    icon: el.icon,
+                    text: el.text,
+                    value: el.value,
+                    color: el.color
+                });
+            }
+
+            function drawGame() {
+                if (!gameActive) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Gambar daun (pengganti ember)
+                ctx.fillStyle = '#4CAF50';
+                ctx.beginPath();
+                ctx.ellipse(player.x + player.width/2, player.y + 5, player.width/2, 15, 0, 0, Math.PI*2);
+                ctx.fill();
+                ctx.fillStyle = '#2E7D32';
+                ctx.beginPath();
+                ctx.ellipse(player.x + player.width/2 - 5, player.y - 5, 20, 10, 0.2, 0, Math.PI*2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(player.x + player.width/2 + 15, player.y - 8, 18, 9, -0.1, 0, Math.PI*2);
+                ctx.fill();
+                
+                // Gambar unsur
+                elements.forEach((el, index) => {
+                    // Lingkaran berwarna
+                    ctx.fillStyle = el.color;
+                    ctx.beginPath();
+                    ctx.arc(el.x, el.y, 16, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                    // Ikon dan teks
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 14px "Segoe UI"';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(el.icon, el.x, el.y - 2);
+                    ctx.font = 'bold 10px "Segoe UI"';
+                    ctx.fillText(el.text, el.x, el.y + 14);
+                    
+                    el.y += el.speed;
+                    
+                    // Cek tangkapan
+                    if (el.y > player.y - 10 && el.y < player.y + player.height &&
+                        el.x > player.x && el.x < player.x + player.width) {
+                        gameScore += el.value;
+                        elements.splice(index, 1);
+                        document.getElementById('scoreDisplay').innerText = gameScore;
+                        document.getElementById('gameMessage').innerText = `✅ +${el.value} poin (${el.text})`;
+                    } else if (el.y > canvas.height) {
+                        elements.splice(index, 1);
+                    }
+                });
+            }
+
+            function resetGame() {
+                gameScore = 0;
+                elements = [];
+                document.getElementById('scoreDisplay').innerText = '0';
+                document.getElementById('gameMessage').innerText = 'Klik kiri/kanan canvas untuk menggeser daun!';
+                if (gameInterval) clearInterval(gameInterval);
+                gameActive = true;
+                gameInterval = setInterval(() => {
+                    if (gameActive && elements.length < 8) {
+                        spawnElement();
+                    }
+                }, 600);
+                requestAnimationFrame(function animate() {
+                    if (!gameActive) return;
+                    drawGame();
+                    requestAnimationFrame(animate);
+                });
+            }
+
+            // Kontrol daun dengan klik
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                if (mouseX < player.x + player.width / 2) {
+                    player.x = Math.max(0, player.x - 50);
+                } else {
+                    player.x = Math.min(canvas.width - player.width, player.x + 50);
+                }
+            });
+
+            document.getElementById('restartGame').addEventListener('click', resetGame);
+
+            // ---------- AUDIO ----------
+            let audioElement;
+            let audioPlaying = false;
+            const audioStatus = document.getElementById('audioStatus');
+
+            function initAudio() {
+                if (audioElement) return;
+                audioElement = new Audio();
+                audioElement.loop = true;
+                audioElement.volume = 0.15;
+                
+                // Suara alam/hutan
+                const audioSources = [
+                    'https://www.soundjay.com/nature/birds-01.mp3',
+                    'https://actions.google.com/sounds/v1/water/stream_water.ogg'
+                ];
+                
+                audioElement.src = audioSources[0];
+                audioElement.addEventListener('error', () => {
+                    audioElement.src = audioSources[1];
+                    audioElement.load();
+                });
+                audioElement.load();
+            }
+
+            function toggleAudio() {
+                if (!audioElement) {
+                    initAudio();
+                    setTimeout(toggleAudio, 500);
+                    return;
+                }
+                
+                if (audioPlaying) {
+                    audioElement.pause();
+                    document.querySelector('#audioBtn i').className = 'fas fa-volume-mute';
+                    audioStatus.textContent = 'Suara alam: OFF';
+                } else {
+                    audioElement.play()
+                        .then(() => {
+                            document.querySelector('#audioBtn i').className = 'fas fa-volume-up';
+                            audioStatus.textContent = 'Suara alam: ON';
+                        })
+                        .catch(err => {
+                            console.log('Audio play error:', err);
+                            audioStatus.textContent = 'Klik izinkan audio';
+                        });
+                }
+                audioPlaying = !audioPlaying;
+                audioStatus.classList.add('show');
+                setTimeout(() => audioStatus.classList.remove('show'), 2000);
+            }
+
+            document.getElementById('audioBtn').addEventListener('click', toggleAudio);
+            window.addEventListener('load', initAudio);
+
+            // ---------- PARTIKEL KLOROPLAS ----------
+            function createParticles(count = 30) {
+                const container = document.getElementById('particleContainer');
+                for (let i = 0; i < count; i++) {
+                    let part = document.createElement('div');
+                    part.classList.add('chloroplast');
+                    part.style.left = Math.random() * 100 + '%';
+                    part.style.animationDuration = 8 + Math.random() * 12 + 's';
+                    part.style.animationDelay = Math.random() * 5 + 's';
+                    part.style.background = ['#2E7D32', '#4CAF50', '#81C784'][Math.floor(Math.random() * 3)];
+                    container.appendChild(part);
+                }
+            }
+            createParticles(40);
+
+            // Inisialisasi
+            renderMateri('proses');
+            renderQuiz();
+            resetGame();
+        })();
+    </script>
+</body>
+</html>
